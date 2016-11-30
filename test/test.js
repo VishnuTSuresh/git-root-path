@@ -1,44 +1,12 @@
 var mock = require('mock-fs');
-var getRootPath = require('../index.js');
+var gitRootPath = require('../index.js');
 var expect = require('chai').expect;
 var path = require('path');
+var mock_directory_structure = require('./mock_directory_structure.json');
 describe('git-root-path', function() {
+
     beforeEach(function() {
-        mock({
-            rootdir:{
-                git_root:{
-                    ".git":{
-                        "index":"//index file inside .git folder"
-                    },
-                    "submodule":{
-                        "deep_sub_module":{
-                            'package.json': '{}'
-                        }
-                    }
-                }
-            },
-            rootdir2:{
-                git_root:{
-                    ".git":{
-                        "index":"//index file inside .git folder;"
-                    },
-                    "submodule":{
-                        "deep_sub_module":{
-                            'package.json': '{}'
-                        }
-                    }
-                }
-            },
-            rootdir3:{
-                gitless_root:{
-                    "submodule":{
-                        "deep_sub_module":{
-                            'package.json': '{}'
-                        }
-                    }
-                }
-            }
-        });
+        mock(mock_directory_structure);
     });
 
     afterEach(function() {
@@ -53,34 +21,35 @@ describe('git-root-path', function() {
             var cross_platform_relative_path=path_with_forward_slash;
             return cross_platform_relative_path;
         }
-        var case1 = getRelativeCrossPlatformPath(getRootPath("rootdir/git_root/submodule/deep_sub_module"));
-        var case2 = getRelativeCrossPlatformPath(getRootPath("rootdir2/git_root/submodule/deep_sub_module"));
-        
+        var case1 = getRelativeCrossPlatformPath(gitRootPath("rootdir/git_root/submodule/deep_sub_module"));
+        var case2 = getRelativeCrossPlatformPath(gitRootPath("rootdir2/git_root/submodule/deep_sub_module"));
+        var case_absolute_path = getRelativeCrossPlatformPath(gitRootPath(path.resolve("rootdir/git_root/submodule/deep_sub_module")));
         expect(case1).to.equal("rootdir/git_root");
         expect(case2).to.equal("rootdir2/git_root");
+        expect(case_absolute_path).to.equal("rootdir/git_root");
     });
     
     it('should throw error if not a git repository',function(){
-        function getRootPathForFolderWithoutGit(){
-            return getRootPath("rootdir3/gitless_root/submodule/deep_sub_module");
+        function gitRootPathForFolderWithoutGit(){
+            return gitRootPath("rootdir3/gitless_root/submodule/deep_sub_module");
         }
-        expect(getRootPathForFolderWithoutGit).to.throw();
+        expect(gitRootPathForFolderWithoutGit).to.throw();
     });
 
     it('should throw error if path is invalid',function(){
-        function getRootPathForNonExistingFolder1(){
-            return getRootPath("rootdir/git_root/submodule/deep_sub_module/non_existing_folder");
+        function gitRootPathForNonExistingFolder_trailing(){
+            return gitRootPath("rootdir/git_root/submodule/deep_sub_module/non_existing_folder");
         }
-        function getRootPathForNonExistingFolder2(){
-            return getRootPath("non_existing_folder/git_root/submodule/deep_sub_module");
+        function gitRootPathForNonExistingFolder_leading(){
+            return gitRootPath("non_existing_folder/git_root/submodule/deep_sub_module");
         }
-        function getRootPathForNonExistingFolder3(){
-            return getRootPath("rootdir/git_root/submodule/non_existing_folder/deep_sub_module");
+        function gitRootPathForNonExistingFolder_middle(){
+            return gitRootPath("rootdir/git_root/submodule/non_existing_folder/deep_sub_module");
         }
-        expect(getRootPathForNonExistingFolder1).to.throw();
-        expect(getRootPathForNonExistingFolder2).to.throw();
-        expect(getRootPathForNonExistingFolder3).to.throw();
+        expect(gitRootPathForNonExistingFolder_trailing).to.throw();
+        expect(gitRootPathForNonExistingFolder_leading).to.throw();
+        expect(gitRootPathForNonExistingFolder_middle).to.throw();
     });
 
-    
+
 });

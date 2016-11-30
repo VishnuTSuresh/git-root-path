@@ -1,0 +1,35 @@
+{
+    "rootdir": {
+        "git_root": {
+            ".git": {
+                "index": "//index file inside .git folder"
+            },
+            "submodule": {
+                "deep_sub_module": {
+                    "package.json": "{}"
+                }
+            }
+        }
+    },
+    "rootdir2": {
+        "git_root": {
+            ".git": {
+                "index": "//index file inside .git folder;"
+            },
+            "submodule": {
+                "deep_sub_module": {
+                    "package.json": "{}"
+                }
+            }
+        }
+    },
+    "rootdir3": {
+        "gitless_root": {
+            "submodule": {
+                "deep_sub_module": {
+                    "package.json": "{}"
+                }
+            }
+        }
+    }
+}
