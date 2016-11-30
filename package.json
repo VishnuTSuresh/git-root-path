@@ -1,0 +1,25 @@
+{
+  "name": "git-root-path",
+  "version": "1.0.0",
+  "description": "Finds the parent directory which is the root of the git repository",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "mocha --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VishnuTSuresh/git-root-path.git"
+  },
+  "author": "Vishnu T Suresh <vishnutsuresh@live.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VishnuTSuresh/git-root-path/issues"
+  },
+  "homepage": "https://github.com/VishnuTSuresh/git-root-path#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "mock-fs": "^3.12.1"
+  }
+}
